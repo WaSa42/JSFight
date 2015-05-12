@@ -8,15 +8,21 @@ var mongoose        = require('mongoose');
 var passport        = require('passport');
 var expressSession  = require('express-session');
 var expressFlash    = require('connect-flash');
+var io              = require('socket.io');
+var connect         = require('connect');
+var MongoStore      = require('connect-mongo')(expressSession);
 
 var databaseConfig  = require('./config/database');
 var sessionConfig   = require('./config/session');
-var passportConfig  = require('./config/passport/init');
+var passportConfig  = require('./passport/init');
+var ioConfig        = require('./socket.io/init.js');
 var routesAuth      = require('./routes/auth');
 var routesApp       = require('./routes/app');
 var User            = require('./models/User');
 
-// database connection
+var app = express();
+
+// database setup
 mongoose.connect(databaseConfig.url, function(err) {
     if (err) {
         console.log('Unable to establish a connection to the database', err);
@@ -25,7 +31,12 @@ mongoose.connect(databaseConfig.url, function(err) {
     }
 });
 
-var app = express();
+// session store setup
+var store = new MongoStore({
+    mongooseConnection: mongoose.connection
+});
+
+var sessionParams = sessionConfig(store);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -41,15 +52,18 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(expressSession(sessionConfig));
+app.use(expressSession(sessionParams));
 app.use(expressFlash());
 app.use(passport.initialize());
 app.use(passport.session());
+
+// socket.io setup
+app.io = io();
+ioConfig(app.io, cookieParser, sessionParams);
+
+// routes setup
 app.use('/', routesAuth);
 app.use('/', routesApp);
-
-// passport configuration
-passportConfig(passport);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -57,6 +71,9 @@ app.use(function(req, res, next) {
     err.status = 404;
     next(err);
 });
+
+// passport setup
+passportConfig(passport);
 
 // error handlers
 

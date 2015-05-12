@@ -1,14 +1,30 @@
 extends layout
 
+block stylesheets
+    link(rel='stylesheet' href='/stylesheets/lobby/chat.css')
+
 block javascripts
-    script(type='text/javascript' src='/javascripts/controllers/AuthCtrl.js')
+    script(type='text/javascript' src='/javascripts/controllers/ChatCtrl.js')
+    script(type='text/javascript' src='http://localhost:3000/socket.io/socket.io.js')
 
 block content
-    div.container-fluid
+    div#container.container
         div.row
-            div.col-xs-4
-                p ...
-            div.col-xs-4
-                p ...
-            div.col-xs-4
-                p ...
+            div.col-xs-7
+                h1 Leaderboard
+            div#chat.col-xs-3(ng-controller='ChatCtrl' ng-init='init()')
+                h1 Chat
+                div#messages.list(ng-hide='isEmpty()' scroll='messages')
+                    div.media(ng-repeat='message in messages')
+                        div.media-body
+                            h4.media-heading {{message.from}}
+                            | {{message.content}}
+                    div#bottom
+                p(ng-show='isEmpty()') No messages yet...
+                form#input(ng-submit='sendMessage()')
+                    div.input-group
+                        input.form-control(type='text' placeholder='New message' ng-model='content')
+                        span.input-group-btn
+                            button.btn.btn-default(type='submit') Send
+            div.col-xs-2
+                h1 Online users
