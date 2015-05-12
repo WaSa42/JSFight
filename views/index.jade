@@ -1,5 +1,8 @@
 extends layout
 
+block javascripts
+    script(type='text/javascript' src='/javascripts/controllers/AuthCtrl.js')
+
 block content
     div.jumbotron
         div.container
@@ -7,9 +10,14 @@ block content
 
     div.container
         div.row
-            div.col-xs-6
-                h2 Login
-                form
+            div.col-xs-6(ng-controller='AuthCtrl')
+                h2 Authentication
+
+                if errors.length
+                    each error in errors
+                        div.alert.alert-danger= error
+
+                form#form(method='post' action='{{action}}')
                     div.form-group
                         label(for='username') Username
                         input.form-control(type='text' name='username' placeholder='Username')
@@ -18,21 +26,14 @@ block content
                         label(for='password') Password
                         input.form-control(type='password' name='password' placeholder='Password')
 
-                    button.btn.btn-default(type='submit') Login
+                    button.btn.btn-primary(type='submit' ng-click='login()') Login
+                    button.btn.btn-default(type='submit' ng-click='register()') Register
 
             div.col-xs-6
-                h2 Register
-                form
-                    div.form-group
-                        label(for='username') Username
-                        input.form-control(type='text' name='username' placeholder='Username')
+                h2 Statistics
 
-                    div.form-group
-                        label(for='password') Password
-                        input.form-control(type='password' name='password' placeholder='Password')
-
-                    div.form-group
-                        label(for='confirmation') Password confirmation
-                        input.form-control(type='password' name='confirmation' placeholder='Password confirmation')
-
-                    button.btn.btn-default(type='submit') Register
+                ul
+                    li x registered users
+                    li x online users
+                    li x sent invitations
+                    li x accepted invitations

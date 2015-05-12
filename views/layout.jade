@@ -1,17 +1,21 @@
 doctype html
-html
+html(ng-app='app')
     head
         meta(charset='utf-8')
         meta(http-equiv='X-UA-Compatible' content='IE=edge')
         meta(name='viewport' content='width=device-width, initial-scale=1')
         title= title
 
-        link(rel='stylesheet' href='/bootstrap/css/bootstrap.min.css')
+        link(rel='stylesheet' href='/lib/bootstrap/css/bootstrap.min.css')
         link(rel='stylesheet' href='/stylesheets/layout.css')
+
+        script(type='text/javascript' src='/lib/angular/angular.js')
+        script(type='text/javascript' src='/javascripts/main.js')
+        block javascripts
 
     body
         nav.navbar.navbar-default.navbar-fixed-top
-            div.container
+            div(class='#{container}')
                 div.navbar-header
                     a.navbar-brand(href='/') JS Fight
                 div.collapse.navbar-collapse
