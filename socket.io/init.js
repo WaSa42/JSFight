@@ -1,5 +1,6 @@
-var passportSocketIo = require('passport.socketio');
-var chat = require('./chat');
+var passportSocketIo    = require('passport.socketio');
+var chat                = require('./chat');
+var status              = require('./status');
 
 module.exports = function(io, cookieParser, sessionParams) {
     io.set('origins', 'http://localhost:3000');
@@ -11,5 +12,6 @@ module.exports = function(io, cookieParser, sessionParams) {
         store: sessionParams.store
     }));
 
+    status(io);
     chat(io);
 };

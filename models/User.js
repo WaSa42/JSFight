@@ -11,7 +11,18 @@ var schema = new Schema({
         type: String,
         required: true
     },
-    createdAt: Date
+    createdAt: {
+        type: Date,
+        required: true
+    },
+    online: {
+        type: Boolean,
+        required: true
+    },
+    score: {
+        type: Number,
+        required: true
+    }
 });
 
 module.exports = mongoose.model('User', schema);

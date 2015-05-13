@@ -3,7 +3,7 @@ app.controller('ChatCtrl', ['$scope', '$http', '$timeout', function($scope, $htt
     var chat = null;
 
     $scope.init = function() {
-        $http.get('/api/messages').success(function(messages) {
+        $http.get('/api/messages/recent').success(function(messages) {
             $scope.messages = messages;
 
             chat = io.connect(window.location.origin + '/chat');

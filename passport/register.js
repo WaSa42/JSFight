@@ -23,7 +23,10 @@ module.exports = function(passport) {
 
                         var newUser = new User({
                             username: username,
-                            password: bcrypt.hashSync(password, bcrypt.genSaltSync(10), null)
+                            password: bcrypt.hashSync(password, bcrypt.genSaltSync(10), null),
+                            createdAt: new Date(),
+                            online: true,
+                            score: 0
                         });
 
                         newUser.save(function(err) {

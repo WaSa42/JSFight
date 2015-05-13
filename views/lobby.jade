@@ -1,20 +1,21 @@
 extends layout
 
 block stylesheets
-    link(rel='stylesheet' href='/stylesheets/lobby/chat.css')
+    link(rel='stylesheet' href='/stylesheets/lobby.css')
 
 block javascripts
     script(type='text/javascript' src='/javascripts/controllers/ChatCtrl.js')
-    script(type='text/javascript' src='http://localhost:3000/socket.io/socket.io.js')
+    script(type='text/javascript' src='/javascripts/controllers/UsersCtrl.js')
+    script(type='text/javascript' src='/socket.io/socket.io.js')
 
 block content
     div#container.container
         div.row
             div.col-xs-7
                 h1 Leaderboard
-            div#chat.col-xs-3(ng-controller='ChatCtrl' ng-init='init()')
+            div#chat.col-xs-3.full-height(ng-controller='ChatCtrl' ng-init='init()')
                 h1 Chat
-                div#messages.list(ng-hide='isEmpty()' scroll='messages')
+                div.list(ng-hide='isEmpty()' scroll='messages')
                     div.media(ng-repeat='message in messages')
                         div.media-body
                             h4.media-heading {{message.from}}
@@ -26,5 +27,11 @@ block content
                         input.form-control(type='text' placeholder='New message' ng-model='content')
                         span.input-group-btn
                             button.btn.btn-default(type='submit') Send
-            div.col-xs-2
+            div.col-xs-2.full-height(ng-controller='UsersCtrl' ng-init='init()')
                 h1 Online users
+                div.list
+                    ul.list-group(ng-hide='isEmpty()')
+                        li.list-group-item(ng-repeat='user in users')
+                            span.badge {{user.score}}
+                            | {{user.username}}
+                    p(ng-show='isEmpty()') No users yet...
