@@ -4,16 +4,28 @@ block stylesheets
     link(rel='stylesheet' href='/stylesheets/lobby.css')
 
 block javascripts
+    script(type='text/javascript' src='/socket.io/socket.io.js')
+    script(type='text/javascript' src='/javascripts/controllers/LeaderboardCtrl.js')
     script(type='text/javascript' src='/javascripts/controllers/ChatCtrl.js')
     script(type='text/javascript' src='/javascripts/controllers/UsersCtrl.js')
-    script(type='text/javascript' src='/socket.io/socket.io.js')
 
 block content
     div#container.container
         div.row
-            div.col-xs-7
+            div.col-xs-7(ng-controller='LeaderboardCtrl' ng-init='init()')
                 h1 Leaderboard
-            div#chat.col-xs-3.full-height(ng-controller='ChatCtrl' ng-init='init()')
+                div.list
+                    div.table-responsive
+                        table.table.table-striped.table-hover
+                            tr
+                                th #
+                                th Username
+                                th Score
+                            tr(ng-repeat="user in users | orderBy: '-score'")
+                                td {{$index + 1}}
+                                td {{user.username}}
+                                td {{user.score}}
+            div#chat.col-xs-3(ng-controller='ChatCtrl' ng-init='init()')
                 h1 Chat
                 div.list(ng-hide='isEmpty()' scroll='messages')
                     div.media(ng-repeat='message in messages')
@@ -27,11 +39,11 @@ block content
                         input.form-control(type='text' placeholder='New message' ng-model='content')
                         span.input-group-btn
                             button.btn.btn-default(type='submit') Send
-            div.col-xs-2.full-height(ng-controller='UsersCtrl' ng-init='init()')
+            div.col-xs-2(ng-controller='UsersCtrl' ng-init='init()')
                 h1 Online users
                 div.list
                     ul.list-group(ng-hide='isEmpty()')
-                        li.list-group-item(ng-repeat='user in users')
+                        li.list-group-item(ng-repeat="user in users | orderBy: 'username'")
                             span.badge {{user.score}}
                             | {{user.username}}
                     p(ng-show='isEmpty()') No users yet...

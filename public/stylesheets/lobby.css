@@ -10,14 +10,14 @@ body {
     min-height: 100%;
 }
 
-#chat {
-    background-color: lightgrey;
-}
-
-.full-height {
+#container .row > div {
     height: 100%;
     min-height: 100%;
     position: relative;
+}
+
+#chat {
+    background-color: lightgrey;
 }
 
 #input {

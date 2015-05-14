@@ -39,4 +39,17 @@ router.get('/api/users/online', security.isAuthenticated, function(req, res) {
         });
 });
 
+router.get('/api/scores', security.isAuthenticated, function(req, res) {
+    User
+        .find()
+        .select({
+            username: 1,
+            score: 1
+        })
+        .sort('-score')
+        .exec(function (err, users) {
+            res.send(users);
+        });
+});
+
 module.exports = router;
