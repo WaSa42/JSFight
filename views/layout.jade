@@ -22,8 +22,15 @@ html(ng-app='app')
                 div.collapse.navbar-collapse
                     ul.nav.navbar-nav
                         li.active
-                            a(href='/')
+                            a(href='/lobby')
                                 span.glyphicon.glyphicon-home(aria-hidden='true')
                                 |  Home
+                    if currentUser
+                        ul.nav.navbar-nav.navbar-right
+                            li
+                                a(href='/logout')
+                                    span.glyphicon.glyphicon-log-out(aria-hidden='true')
+                                    |  Log out
+                        p.navbar-text.navbar-right Signed in as #{currentUser.username}
 
         block content

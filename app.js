@@ -15,6 +15,7 @@ var MongoStore      = require('connect-mongo')(expressSession);
 var databaseConfig  = require('./config/database');
 var sessionConfig   = require('./config/session');
 var passportConfig  = require('./passport/init');
+var jadeConfig      = require('./passport/jade');
 var ioConfig        = require('./socket.io/init.js');
 var routesAuth      = require('./routes/auth');
 var routesApp       = require('./routes/app');
@@ -61,6 +62,10 @@ app.use(passport.session());
 app.io = io();
 ioConfig(app.io, cookieParser, sessionParams);
 
+// passport setup
+passportConfig(passport);
+app.use(jadeConfig);
+
 // routes setup
 app.use('/', routesAuth);
 app.use('/', routesApp);
@@ -71,9 +76,6 @@ app.use(function(req, res, next) {
     err.status = 404;
     next(err);
 });
-
-// passport setup
-passportConfig(passport);
 
 // error handlers
 
