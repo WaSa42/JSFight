@@ -1,4 +1,4 @@
-app.controller('UsersCtrl', ['$scope', '$http', '$timeout', function($scope, $http) {
+app.controller('UsersCtrl', ['$rootScope', '$scope', '$http', '$timeout', function($rootScope, $scope, $http) {
     $scope.users = [];
     var socket = null;
 
@@ -13,6 +13,21 @@ app.controller('UsersCtrl', ['$scope', '$http', '$timeout', function($scope, $ht
         });
 
         return online;
+    };
+
+    var startGame = function (username, apply) {
+        // Cancel invitations
+        $scope.users.forEach(function (user) {
+            if ('invitation' in user) {
+                $scope.cancelInvitation(user);
+            }
+        });
+
+        // Start game
+        $rootScope.$emit('start-game', {
+            username: username,
+            apply: apply
+        });
     };
 
     $scope.init = function () {
@@ -36,10 +51,76 @@ app.controller('UsersCtrl', ['$scope', '$http', '$timeout', function($scope, $ht
                     $scope.$apply();
                 }
             });
+
+            socket.on('received-invitation', function (username) {
+                var index = isUserOnline({
+                    username: username
+                });
+
+                if (index !== false) {
+                    $scope.users[index].invitation = 'received';
+                    $scope.$apply();
+                }
+            });
+
+            socket.on('canceled-invitation', function (username) {
+                var index = isUserOnline({
+                    username: username
+                });
+
+                if (index !== false) {
+                    delete $scope.users[index].invitation;
+                    $scope.$apply();
+                }
+            });
+
+            socket.on('accepted-invitation', function (username) {
+                var index = isUserOnline({
+                    username: username
+                });
+
+                if (index !== false) {
+                    delete $scope.users[index].invitation;
+                    startGame(username, true);
+                }
+            });
+
+            socket.on('users-in-game', function (usernames) {
+                usernames.forEach(function (username) {
+                    var index = isUserOnline({
+                        username: username
+                    });
+
+                    if (index !== false) {
+                        $scope.users[index].invitation = 'in-game';
+                        $scope.$apply();
+                    }
+                });
+            });
         });
     };
 
     $scope.isEmpty = function() {
         return $scope.users.length === 0;
+    };
+
+    $scope.sendInvitation = function (user) {
+        socket.emit('send-invitation', user.username);
+        user.invitation = 'sent';
+    };
+
+    $scope.cancelInvitation = function (user) {
+        socket.emit('cancel-invitation', user.username);
+        delete user.invitation;
+    };
+
+    $scope.acceptInvitation = function (user) {
+        socket.emit('accept-invitation', user.username);
+        delete user.invitation;
+        startGame(user.username, false);
+    };
+
+    $scope.inGame = function() {
+        return $rootScope.inGame;
     };
 }]);

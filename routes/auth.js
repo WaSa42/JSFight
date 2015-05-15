@@ -5,6 +5,10 @@ var router = express.Router();
 var names = ['login', 'register'];
 
 router.get('/', function(req, res) {
+    if (req.user) {
+        res.redirect('/lobby');
+    }
+
     res.render('index', {
         title: 'JSFight',
         container: 'container',

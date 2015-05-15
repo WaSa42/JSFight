@@ -24,6 +24,10 @@ module.exports = function(passport) {
                         return done(null, false, 'Invalid password');
                     }
 
+                    if (user.online) {
+                        return done(null, false, 'Already logged in');
+                    }
+
                     return done(null, user);
                 }
             );

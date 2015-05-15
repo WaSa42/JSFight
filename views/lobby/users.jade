@@ -1,0 +1,15 @@
+div.col-xs-2(ng-controller='UsersCtrl' ng-init='init()')
+    h1 Online users
+    div.list
+        ul.list-group(ng-hide='isEmpty()')
+            li.list-group-item(ng-repeat="user in users | orderBy: 'username'")
+                span.badge {{user.score}}
+                | {{user.username}}
+                span(ng-switch='user.invitation' ng-hide='inGame()')
+                    btn.btn.btn-default.btn-xs(ng-switch-default ng-click='sendInvitation(user)') Invite
+                    btn.btn.btn-danger.btn-xs(ng-switch-when='sent' ng-click='cancelInvitation(user)') Cancel
+                    span(ng-switch-when='received')
+                        btn.btn.btn-success.btn-xs(ng-click='acceptInvitation(user)') Accept
+                        btn.btn.btn-danger.btn-xs(ng-click='cancelInvitation(user)') Decline
+                    span.label.label-info(ng-switch-when='in-game') In game
+        p(ng-show='isEmpty()') No users yet...

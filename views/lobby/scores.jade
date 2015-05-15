@@ -1,0 +1,13 @@
+div.col-xs-7(ng-controller='ScoresCtrl' ng-init='init()' ng-hide='hide')
+    h1 Leaderboard
+    div.list
+        div.table-responsive
+            table.table.table-striped.table-hover
+                tr
+                    th #
+                    th Username
+                    th Score
+                tr(ng-repeat="user in users | orderBy: '-score'")
+                    td {{$index + 1}}
+                    td {{user.username}}
+                    td {{user.score}}

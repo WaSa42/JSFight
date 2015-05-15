@@ -1,4 +1,5 @@
-app.controller('LeaderboardCtrl', ['$scope', '$http', '$timeout', function($scope, $http) {
+app.controller('ScoresCtrl', ['$rootScope', '$scope', '$http', function($rootScope, $scope, $http) {
+    $scope.hide = false;
     $scope.users = [];
     var scores = null;
 
@@ -26,4 +27,12 @@ app.controller('LeaderboardCtrl', ['$scope', '$http', '$timeout', function($scop
             });
         });
     };
+
+    $rootScope.$on('start-game', function(event, args) {
+        $scope.hide = true;
+
+        if (args.apply) {
+            $scope.$apply();
+        }
+    });
 }]);

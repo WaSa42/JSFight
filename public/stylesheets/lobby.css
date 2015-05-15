@@ -32,3 +32,15 @@ body {
     height: calc(100% - 134px);
     overflow: auto;
 }
+
+#game {
+    display: block;
+    position: absolute;
+    width: 768px;
+    height: 384px;
+    top: 50%;
+    left: 50%;
+    margin-top: -192px;
+    margin-left: -384px;
+    background-image: url('../images/game/background.gif');
+}

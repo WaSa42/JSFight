@@ -1,0 +1,14 @@
+div#chat.col-xs-3(ng-controller='ChatCtrl' ng-init='init()')
+    h1 Chat
+    div.list(ng-hide='isEmpty()' scroll='messages')
+        div.media(ng-repeat='message in messages')
+            div.media-body
+                h4.media-heading {{message.from}}
+                | {{message.content}}
+        div#bottom
+    p(ng-show='isEmpty()') No messages yet...
+    form#input(ng-submit='sendMessage()')
+        div.input-group
+            input.form-control(type='text' placeholder='New message' ng-model='content')
+            span.input-group-btn
+                button.btn.btn-default(type='submit') Send
