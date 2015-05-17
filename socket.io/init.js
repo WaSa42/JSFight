@@ -1,9 +1,11 @@
 var passportSocketIo    = require('passport.socketio');
+var domain              = require('../config/domain');
+var game                = require('./game');
 var chat                = require('./chat');
 var users               = require('./users');
 
 module.exports = function(io, cookieParser, sessionParams) {
-    io.set('origins', 'http://localhost:3000');
+    io.set('origins', domain.url);
 
     io.use(passportSocketIo.authorize({
         cookieParser: cookieParser,
@@ -12,6 +14,7 @@ module.exports = function(io, cookieParser, sessionParams) {
         store: sessionParams.store
     }));
 
-    users(io);
+    game(io);
     chat(io);
+    users(io);
 };

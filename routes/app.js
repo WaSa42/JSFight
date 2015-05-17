@@ -14,7 +14,7 @@ router.get('/lobby', security.isAuthenticated, function(req, res, next) {
 router.get('/api/messages/recent', security.isAuthenticated, function(req, res) {
     Message
         .find()
-        .sort('createdAt')
+        .sort('-createdAt')
         .limit(100)
         .exec(function (err, messages) {
             res.send(messages);
